@@ -44,7 +44,7 @@ export default class ImageContent extends React.Component {
     document.addEventListener('touchstart', this.handleMoveStart);
     document.addEventListener('touchend', this.handleMoveEnd);
     window.setTimeout(this.props.toggleControls, 500);
-    if(this.props.showImageModifiers) {
+    if (this.props.showImageModifiers) {
       document.addEventListener('mousemove', this.handleMove);
       document.addEventListener('touchmove', this.handleMove);
       document.addEventListener('wheel', this.handleWheel);
@@ -65,12 +65,12 @@ export default class ImageContent extends React.Component {
   resetImageInitialState(props) {
     let img = new Image();
     let _this = this;
-    img.onload = function(){
+    img.onload = function () {
       let [width, height] = [this.width, this.height];
       let box = ReactDOM.findDOMNode(_this.refs.container);
       let [boxWidth, boxHeight] = [box.offsetWidth, box.offsetHeight]
       let ratio = Math.min(boxWidth / width, boxHeight / height);
-      if(isNaN(ratio))
+      if (isNaN(ratio))
         ratio = 1;
       _this.setState({
         loader: false,
@@ -86,6 +86,7 @@ export default class ImageContent extends React.Component {
       })
     };
     img.src = props.src;
+    img.downloadableImage = props.downloadableImage;
   }
 
   handleWindowResize() {
@@ -99,7 +100,7 @@ export default class ImageContent extends React.Component {
   }
 
   handleZoom(direction, scale) {
-    if(!scale)
+    if (!scale)
       scale = 1;
     let percent = direction > 0 ? Math.pow(ZOOM_STEP, scale) : Math.pow(1 / ZOOM_STEP, scale);
     let ratio = this.setZoomLimits(this.state.ratio * percent);
@@ -107,7 +108,7 @@ export default class ImageContent extends React.Component {
     let delta = 0.05;
     let newPositionX, newPositionY
 
-    if(Math.min(state.boxWidth / state.width, state.boxHeight / state.height) >= (ratio - delta) ){
+    if (Math.min(state.boxWidth / state.width, state.boxHeight / state.height) >= (ratio - delta)) {
       newPositionX = (state.boxWidth - state.width * ratio) / 2;
       newPositionY = (state.boxHeight - state.height * ratio) / 2;
     }
@@ -119,8 +120,8 @@ export default class ImageContent extends React.Component {
       let bgCursorX = offsetX - state.positionX;
       let bgCursorY = offsetY - state.positionY;
 
-      let bgRatioX = bgCursorX/(state.width * state.ratio);
-      let bgRatioY = bgCursorY/(state.height * state.ratio);
+      let bgRatioX = bgCursorX / (state.width * state.ratio);
+      let bgRatioY = bgCursorY / (state.height * state.ratio);
 
       newPositionX = offsetX - (state.width * ratio * bgRatioX);
       newPositionY = offsetY - (state.height * ratio * bgRatioY);
@@ -136,26 +137,26 @@ export default class ImageContent extends React.Component {
   setZoomLimits(size) {
     let state = this.state;
     let originalRatio = Math.min(state.boxWidth / state.width, state.boxHeight / state.height);
-    if((size / originalRatio) > MAX_ZOOM_SIZE)
+    if ((size / originalRatio) > MAX_ZOOM_SIZE)
       return MAX_ZOOM_SIZE * originalRatio;
-    else if((size / originalRatio) < MIN_ZOOM_SIZE)
+    else if ((size / originalRatio) < MIN_ZOOM_SIZE)
       return MIN_ZOOM_SIZE * originalRatio;
     else
       return size;
   }
 
   handleWheel(ev) {
-    if(this.isInsideImage(ev))
+    if (this.isInsideImage(ev))
       this.handleZoom(ev.deltaY);
   }
 
   handleMove(ev) {
     ev = this.getEv(ev);
     let state = this.state;
-    if(!state.moving)
+    if (!state.moving)
       return;
     let posX, posY;
-    switch(state.rotate) {
+    switch (state.rotate) {
       case 90:
         posY = this.startPoints[0] - ev.pageX;
         posX = ev.pageY - this.startPoints[1];
@@ -174,9 +175,9 @@ export default class ImageContent extends React.Component {
     }
     this.startPoints = [ev.pageX, ev.pageY]
 
-    if(state.positionX + posX >= 0 || state.positionX + posX <= (state.boxWidth - state.width * state.ratio))
+    if (state.positionX + posX >= 0 || state.positionX + posX <= (state.boxWidth - state.width * state.ratio))
       posX = 0;
-    if(state.positionY + posY >= 0 || state.positionY + posY <= (state.boxHeight - state.height * state.ratio))
+    if (state.positionY + posY >= 0 || state.positionY + posY <= (state.boxHeight - state.height * state.ratio))
       posY = 0;
 
     this.setState({
@@ -193,7 +194,7 @@ export default class ImageContent extends React.Component {
 
   handleMoveStart(ev) {
     ev = this.getEv(ev);
-    if(!this.isInsideImage(ev) || ev.which !== 1)
+    if (!this.isInsideImage(ev) || ev.which !== 1)
       return;
     this.startPoints = [ev.pageX, ev.pageY];
     this.setState({
@@ -214,14 +215,14 @@ export default class ImageContent extends React.Component {
 
   isInsideImage(ev) {
     let rect = ReactDOM.findDOMNode(this.refs.container).getBoundingClientRect();
-    if(ev.pageY < rect.top || ev.pageY > rect.bottom || ev.pageX < rect.left || ev.pageX > rect.right)
+    if (ev.pageY < rect.top || ev.pageY > rect.bottom || ev.pageX < rect.left || ev.pageX > rect.right)
       return false;
     return true;
   }
 
   getEv(ev) {
-    if(ev.type === 'touchstart' || ev.type === 'touchmove' || ev.type === 'touchend')
-      return {pageX: ev.touches[0].pageX, pageY: ev.touches[0].pageY, which: 1, target: ev.target}
+    if (ev.type === 'touchstart' || ev.type === 'touchmove' || ev.type === 'touchend')
+      return { pageX: ev.touches[0].pageX, pageY: ev.touches[0].pageY, which: 1, target: ev.target }
     return ev
   }
 
@@ -229,19 +230,21 @@ export default class ImageContent extends React.Component {
     let [props, state] = [this.props, this.state];
     let background = `url(${props.src})`;
     let modifiers, loader;
-    if(props.showImageModifiers) {
+    if (props.showImageModifiers) {
       modifiers = (
         <ImageModifiers
           handleRotate={this.handleRotate}
           handleZoom={this.handleZoom}
-          currentImage={props.src}/>
+          downloadableImage={props.downloadableImage}
+          currentImage={props.src} />
+
       )
     }
-    if(state.loader){
+    if (state.loader) {
       background = 'none';
       loader = (
         <div className='lightbox-loader'>
-          <Icon icon="spinner" size={ 58 } />
+          <Icon icon="spinner" size={58} />
         </div>
       )
     }
@@ -271,5 +274,6 @@ export default class ImageContent extends React.Component {
 
 Image.propTypes = {
   src: PropTypes.string.isRequired,
+  downloadableImage: PropTypes.string,
   showImageModifiers: PropTypes.bool.isRequired
 }
