@@ -62,9 +62,10 @@ Lightbox.defaultProps = {
     return (
       <img
         key={idx}
-        src={ !!image.thumbnail ? image.thumbnail : image.src  }
+        src={!!image.thumbnail ? image.thumbnail : image.src}
         className='lightbox-img-thumbnail'
-        style={{width: width, height: height}}
+        downloadableImage={image.downloadableImage}
+        style={{ width: width, height: height }}
         alt={image.title}
         onClick={toggleLightbox.bind(null, idx)} />
     )
@@ -75,6 +76,7 @@ Lightbox.propTypes = {
   images: PropTypes.arrayOf(PropTypes.shape({
     src: PropTypes.string.isRequired,
     title: PropTypes.string,
+    downloadableImage: PropTypes.string,
     description: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     thumbnail: PropTypes.string
   })).isRequired,
