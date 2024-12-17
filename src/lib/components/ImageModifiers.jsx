@@ -44,7 +44,12 @@ export default class ImageModifiers extends React.Component {
         <Button icon="zoom-out" onClick={this.handleZoomOut} size={34} hasRipple={true} />
         <Button icon="rotate-left" onClick={this.handleRotateCounterclockwise} size={34} hasRipple={true} />
         <Button icon="rotate-right" onClick={this.handleRotateClockwise} size={34} hasRipple={true} />
-        {this.props.downloadableImage ? (<Button icon="download" onClick={this.handleDownloadableImage} size={34} hasRipple={true} />) : (<Button icon="download" onClick={this.handleDownload} size={34} hasRipple={true} />)}
+        <Button
+          icon="download"
+          onClick={this.props.downloadableImage ? this.handleDownloadableImage : this.handleDownload}
+          size={34}
+          hasRipple={true}
+        />
       </div>
     )
   }
