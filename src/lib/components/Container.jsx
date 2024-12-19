@@ -25,19 +25,19 @@ export default class Container extends React.Component {
     };
   }
 
-  getDescriptions(){
+  getDescriptions() {
     let images = this.state.imagesDescriptions;
     this.props.images.forEach((image, index) => {
-      if(!image.description) return;
-      if(image.description.then){ //if promise
+      if (!image.description) return;
+      if (image.description.then) { //if promise
         image.description.then((data) => {
           images[index] = data;
-          this.setState({imagesDescriptions: images});
+          this.setState({ imagesDescriptions: images });
         });
         return;
       }
       images[index] = image.description;
-      this.setState({imagesDescriptions: images});
+      this.setState({ imagesDescriptions: images });
     });
   }
 
@@ -61,12 +61,12 @@ export default class Container extends React.Component {
 
   handleKeyboard(ev) {
     const key = ev.keyCode ? ev.keyCode : ev.which;
-    if(this.timeLastTransition &&
+    if (this.timeLastTransition &&
       ((new Date()) - this.timeLastTransition) < transitionTime + transitionDelta) {
       return;
     }
     this.timeLastTransition = new Date();
-    switch(key){
+    switch (key) {
       case 37:
         return this.handleLeftClick();
       case 39:
@@ -78,7 +78,7 @@ export default class Container extends React.Component {
     }
   }
 
-  handleLeftClick(){
+  handleLeftClick() {
     if (this.canMoveToLeft()) {
       this.setState({
         selectedImageIndex: (this.state.selectedImageIndex - 1),
@@ -87,7 +87,7 @@ export default class Container extends React.Component {
     };
   }
 
-  handleRightClick(){
+  handleRightClick() {
     if (this.canMoveToRight()) {
       this.setState({
         selectedImageIndex: (this.state.selectedImageIndex + 1),
@@ -116,22 +116,22 @@ export default class Container extends React.Component {
     let description = props.renderDescriptionFunc.call(this, descriptionText);
     const transitionName = 'lightbox-transition-image';
 
-    if(this.canMoveToLeft())
+    if (this.canMoveToLeft())
       leftButton = (
         <div className='lightbox-btn-left'>
-          <Button icon="left-arrow" onClick={this.handleLeftClick} size={ 56 } hasRipple={ true } />
+          <Button icon="left-arrow" onClick={this.handleLeftClick} size={56} hasRipple={true} />
         </div>
       )
-    if(this.canMoveToRight())
+    if (this.canMoveToRight())
       rightButton = (
         <div className='lightbox-btn-right'>
-          <Button icon="right-arrow" onClick={this.handleRightClick} size={ 56 } hasRipple={ true } />
+          <Button icon="right-arrow" onClick={this.handleRightClick} size={56} hasRipple={true} />
         </div>
       )
     return (
       <div className='lightbox-backdrop' ref='container'>
         <div className='lightbox-btn-close'>
-          <Button icon="back-arrow" onClick={props.toggleLightbox} size={ 34 } hasRipple={ true } />
+          <Button icon="back-arrow" onClick={props.toggleLightbox} size={34} hasRipple={true} />
         </div>
         <div className='lightbox-title-content'>
           <div className='lightbox-title'>
@@ -142,21 +142,22 @@ export default class Container extends React.Component {
           </div>
         </div>
         <CSSTransitionGroup transitionAppear={true}
-                            transitionAppearTimeout={transitionTime}
-                            transitionEnterTimeout={transitionTime}
-                            transitionLeaveTimeout={transitionTime}
-                            transitionName={ {
-                              enter: `${transitionName}-enter-${state.direction}`,
-                              enterActive: `${transitionName}-enter-${state.direction}-active`,
-                              leave: `${transitionName}-leave-${state.direction}`,
-                              leaveActive: `${transitionName}-leave-${state.direction}-active`,
-                              appear: `${transitionName}-appear`,
-                              appearActive: `${transitionName}-appear-active`
-                            } }>
+          transitionAppearTimeout={transitionTime}
+          transitionEnterTimeout={transitionTime}
+          transitionLeaveTimeout={transitionTime}
+          transitionName={{
+            enter: `${transitionName}-enter-${state.direction}`,
+            enterActive: `${transitionName}-enter-${state.direction}-active`,
+            leave: `${transitionName}-leave-${state.direction}`,
+            leaveActive: `${transitionName}-leave-${state.direction}-active`,
+            appear: `${transitionName}-appear`,
+            appearActive: `${transitionName}-appear-active`
+          }}>
           <ImageContent key={image.src}
-                        src={image.src}
-                        showImageModifiers={props.showImageModifiers}
-                        toggleControls={this.toggleControls} />
+            src={image.src}
+            downloadableImage={image.downloadableImage}
+            showImageModifiers={props.showImageModifiers}
+            toggleControls={this.toggleControls} />
         </CSSTransitionGroup>
         {leftButton}
         {rightButton}

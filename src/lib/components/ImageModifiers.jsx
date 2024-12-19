@@ -29,18 +29,19 @@ export default class ImageModifiers extends React.Component {
   }
 
   handleDownload() {
-    console.log(this.props.currentImage);
-    window.open(this.props.currentImage);
+    console.log("DownloadableImage", this.props.downloadableImage);
+    console.log("Image", this.props.currentImage);
+    window.open(!!this.props.downloadableImage ? this.props.downloadableImage : this.props.currentImage);
   }
 
   render() {
     return (
       <div className='lightbox-modifiers-box'>
-        <Button icon="zoom-in" onClick={this.handleZoomIn} size={ 34 } hasRipple={ true } />
-        <Button icon="zoom-out" onClick={this.handleZoomOut} size={ 34 } hasRipple={ true } />
-        <Button icon="rotate-left" onClick={this.handleRotateCounterclockwise} size={ 34 } hasRipple={ true } />
-        <Button icon="rotate-right" onClick={this.handleRotateClockwise} size={ 34 } hasRipple={ true } />
-        <Button icon="download" onClick={this.handleDownload} size={ 34 } hasRipple={ true } />
+        <Button icon="zoom-in" onClick={this.handleZoomIn} size={34} hasRipple={true} />
+        <Button icon="zoom-out" onClick={this.handleZoomOut} size={34} hasRipple={true} />
+        <Button icon="rotate-left" onClick={this.handleRotateCounterclockwise} size={34} hasRipple={true} />
+        <Button icon="rotate-right" onClick={this.handleRotateClockwise} size={34} hasRipple={true} />
+        <Button icon="download" onClick={this.handleDownload} size={34} hasRipple={true} />
       </div>
     )
   }
@@ -49,5 +50,6 @@ export default class ImageModifiers extends React.Component {
 ImageModifiers.propTypes = {
   handleRotate: PropTypes.func.isRequired,
   handleZoom: PropTypes.func.isRequired,
-  currentImage: PropTypes.string.isRequired
+  currentImage: PropTypes.string.isRequired,
+  downloadableImage: PropTypes.string
 }
